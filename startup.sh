@@ -1,4 +1,6 @@
 #!/bin/bash
+whoami
+id
 
 if [ -n "$(echo $(ruby -v) | grep 2.4.1)" ]
 then
