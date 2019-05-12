@@ -1,7 +1,6 @@
 #!/bin/bash
 
-
-if [ -n "$(ruby -v)" ]
+if [ -n "$(echo $(ruby -v) | grep 2.4.1)" ]
 then
 echo "Ruby work"
 else
