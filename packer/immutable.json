@@ -36,7 +36,14 @@
   },
   {
    "type": "shell",
-   "script": "scripts/deploy.sh",
+   "script": "scripts/deploy.sh"
+  },
+  {
+   "type": "shell",
+   "inline": [
+     "wget -O /etc/systemd/system/puma.service https://raw.githubusercontent.com/gasgurda/infra/base-os-packer/packer/files/puma.service",
+     "systemctl enable puma.service"
+    ],
    "execute_command": "sudo {{.Path}}"
   }
  ]
