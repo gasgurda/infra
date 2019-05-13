@@ -1,0 +1,11 @@
+[Unit]
+Description=Puma Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/appuser/reddit/puma -d
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
