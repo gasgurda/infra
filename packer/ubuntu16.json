@@ -5,13 +5,14 @@
   "image_description": null,
   "disk_tpe": "pd-standard",
   "disk_sz": "10",
-  "tgs": "puma-server"
+  "tgs": "puma-server",
+  "proj_id": "infra-240523"
   },
 
  "builders": [
   {
   "type": "googlecompute",
-  "project_id": "week-3-240400",
+  "project_id": "{{user `proj_id`}}",
   "image_name": "reddit-base-{{timestamp}}",
   "source_image": "{{user `src_image`}}",
   "zone": "europe-west1-b",
