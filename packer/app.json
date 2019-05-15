@@ -1,0 +1,34 @@
+{
+ "variables": {
+  "machine_type": null,
+  "src_image": "ubuntu-1604-xenial-v20190430",
+  "image_description": "reddit-app-server",
+  "disk_tpe": "pd-standard",
+  "disk_sz": "10",
+  "tgs": "reddit-app-server",
+  "proj_id": "infra-240523"
+  },
+
+ "builders": [
+  {
+  "type": "googlecompute",
+  "project_id": "{{user `proj_id`}}",
+  "image_name": "reddit-ruby-base-{{timestamp}}",
+  "source_image": "{{user `src_image`}}",
+  "zone": "europe-west1-b",
+  "ssh_username": "appuser",
+  "machine_type": "{{user `machine_type`}}",
+  "image_description": "{{user `image_description`}}",
+  "disk_type": "{{user `disk_tpe`}}",
+  "disk_size": "{{user `disk_sz`}}",
+  "network": "default",
+  "tags": "{{user `tgs`}}"
+  }
+ ],
+ "provisioners": [
+  {
+   "type": "shell",
+   "script": "scripts/install_ruby.sh"
+  }
+ ]
+}
