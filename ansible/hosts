@@ -1,1 +1,8 @@
-reddit_app ansible_host=35.241.166.158
+appserver ansible_host=35.241.166.158
+dbserver  ansible_host=35.205.168.235
+
+[app]
+appserver
+
+[db]
+dbserver

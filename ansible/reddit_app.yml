@@ -1,7 +1,7 @@
 # Setup and configure ruby things for reddit app
 - name: "Reddit App: Configure app environment"
-  hosts: all
-#  gather_facts: no
+  hosts: app
+  gather_facts: no
   become: yes
 
   tasks:
@@ -26,11 +26,22 @@
 
 # Setup and configure mongodb for reddit app
 - name: "Reddit App: Install mongodb"
-  hosts: all
+  hosts: db
   gather_facts: no
   become: yes  
-
+  vars:
+    mongo_bind_ip: 0.0.0.0
+ 
   tasks:
+  - name: Change mongo config file
+    become: true
+    template:
+      src: templates/mongod.conf.j2
+      dest: /etc/mongod.conf
+      mode: 0644
+    tags: db-tag
+    notify: Restart_mongod
+
   - name: Add apt key for repo
     apt_key:
       keyserver: keyserver.ubuntu.com
@@ -53,28 +64,47 @@
       name: mongod
       state: started
       enabled: yes
+  
+  handlers:
+  - name: Restart_mongod
+    become: true
+    systemd:
+      name: mongod
+      state: restarted
 
 # Deploy reddit app
 - name: "Reddit App: Deploy application"
-  hosts: reddit_app
+  hosts: app
   gather_facts: no
+  vars:
+    db_host: 10.132.15.196
 
   tasks:
   - name: Clone github repo
     git:
       repo: https://github.com/Artemmkin/reddit.git
       dest: /home/appuser/reddit
+      version: monolith
+      force: yes
  
   - name: Install Bundle
     bundler:
       state: latest
       chdir: /home/appuser/reddit
+    notify: Reload_puma
 
   - name: Copy puma.service config
     become: yes
     copy:
       src: files/puma.service
       dest: /etc/systemd/system/puma.service
+    notify: Reload_puma
+
+  - name: Add config for DB connection
+    template:
+      src: templates/db_config.j2
+      dest: /home/appuser/db_config 
+    notify: Reload_puma
 
   - name: start puma.service
     become: true
@@ -82,3 +112,11 @@
       name: puma.service
       state: started
       enabled: yes
+
+  handlers:
+    - name: Reload_puma
+      become: true
+      systemd: 
+        name: puma
+        state: restarted
+       
