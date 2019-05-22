@@ -1,0 +1,16 @@
+packer/variables.json
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+*.tfvars
+*.retry
+*.yamllint
+.terraform
+.molecule
+.gce
+.vagrant
+.cache
+account.json
+account.json
+Vagrantfile.backup
+ansible/gce.ini
