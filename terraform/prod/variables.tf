@@ -13,15 +13,15 @@ variable public_key_path {
 
 variable db_disk_image {
   description = "Disk image for reddit db"
-  default     = "reddit-mongodb-base-1557865627"
+  default     = "ubuntu-1604-xenial-v20190514"
 }
 
 variable app_disk_image {
   description = "Disk image for reddit app"
-  default     = "reddit-ruby-base-1557865888"
+  default     = "ubuntu-1604-xenial-v20190514"
 }
 
 variable source_ranges {
-  description = "Allow only my ipi address access"
+  description = "Allowed ip addresses"
   default     = ["0.0.0.0/0"]
 }
