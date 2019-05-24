@@ -1,0 +1,35 @@
+---
+# tasks file for db
+- name: Show info about the env this host belongs to
+  debug:
+    msg: "This host is in {{ env }} environment"
+
+- name: Change mongo config file
+  template:
+    src: mongod.conf.j2
+    dest: /etc/mongod.conf
+    mode: 0644
+  notify: Restart_mongod
+
+- name: Add apt key for repo
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: EA312927
+
+- name: Add mongodb repo
+  apt_repository:
+    repo: deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse
+    state: present
+    filename: mongodb-org-3.2.list
+
+- name: Install mongodb package
+  apt:
+    name: mongodb-org
+    state: present
+    update_cache: yes
+
+- name: Enable and start mongod service
+  systemd:
+    name: mongod
+    state: started
+    enabled: yes
