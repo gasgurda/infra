@@ -20,28 +20,28 @@
 - name: Clone github repo
   git:
     repo: https://github.com/Artemmkin/reddit.git
-    dest: /home/appuser/reddit
+    dest: "/home/{{ deploy_user }}/reddit"
     version: monolith
     force: yes
 
 - name: Install Bundle
   bundler:
     state: latest
-    chdir: /home/appuser/reddit
+    chdir: "/home/{{ deploy_user }}/reddit"
   notify: Reload_puma
 
-- name: Copy puma.service config
-  copy:
-    src: puma.service
+- name: Add puma.service config
+  template:
+    src: puma.service.j2
     dest: /etc/systemd/system/puma.service
   notify: Reload_puma
 
 - name: Add config for DB connection
   template:
     src: db_config.j2
-    dest: /home/appuser/db_config
-    owner: appuser
-    group: appuser
+    dest: "/home/{{ deploy_user }}/db_config"
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
   notify: Reload_puma
 
 - name: start puma.service
